@@ -61,11 +61,14 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        // console.log(email, password)
 
         //check for user email
         const auth = await Auth.findOne({ email });
         // console.log(auth)
+        // console.log(auth)
         const user = await User.findOne({ email });
+        // console.log(user)
 
         if (!auth) {
             // return res.status(200).json({ success: false, message: "user not found" })
@@ -74,15 +77,16 @@ const login = async (req, res) => {
 
         const tokenData = {
             id: user.id,
-            email: auth.email,
+            email: user.email,
             role: auth.role
         }
 
+        // console.log(await bcrypt.compare(password, auth.password))
+
         if (auth && (await bcrypt.compare(password, auth.password))) {
-            // return sendResponse(res, HTTP_STATUS.OK, "user logged in")
             return sendResponse(res, HTTP_STATUS.OK, "User logged in", {
                 success: true,
-                _id: auth.id,
+                id: user.id,
                 email: auth.email,
                 token: generateToken(tokenData),
             })
@@ -91,12 +95,13 @@ const login = async (req, res) => {
             return sendResponse(res, HTTP_STATUS.BAD_REQUEST, "Invalid Credentials")
         }
     } catch (error) {
-        res.status(500).json({ success: false, message: "internal server error" })
+        return sendResponse(res, HTTP_STATUS.INTERNAL_SERVER_ERROR, "internal server error", error)
+        // res.status(500).json({ success: false, message: "internal server error" })
     }
 };
 
 const generateToken = (user) => {
-    return jwt.sign({ user }, process.env.JWT_SECRET, {
+    return jwt.sign( {user} , process.env.JWT_SECRET, {
         expiresIn: "1h",
     });
 };

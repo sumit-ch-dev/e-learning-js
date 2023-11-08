@@ -10,7 +10,7 @@ router.get('/', getCourses);
 router.get('/:courseId', getCourseById);
 router.put('/:courseId', updateCourse);
 router.delete('/:courseId', deleteCourse);
-router.post('/:courseId/lessons', createLesson);
+
 
 
 module.exports = router;

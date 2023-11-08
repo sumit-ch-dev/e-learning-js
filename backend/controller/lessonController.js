@@ -50,6 +50,26 @@ const createLesson = async (req, res) => {
     }
 };
 
+const getLessons = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+
+        const course = await Course.findById(courseId).populate('lessons');
+
+        if (!course) {
+            return sendResponse(res, 404, 'Course not found');
+        }
+
+        return sendResponse(res, 200, 'Lessons fetched successfully', { lessons: course.lessons });
+    } catch (error) {
+        console.error(error);
+        return sendResponse(res, 500, 'Internal Server Error');
+    }
+}
+
+
+
 module.exports = {
     createLesson,
+    getLessons
 };

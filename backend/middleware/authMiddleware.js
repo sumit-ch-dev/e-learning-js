@@ -35,6 +35,8 @@ const User = require("../models/userModel");
 //     }
 // });
 
+
+
 const isAuthenticated = (req, res, next) => {
     try {
         if (!req.headers.authorization) {
@@ -73,9 +75,11 @@ const isInstructor = (req, res, next) => {
         const token = req.headers.authorization.split(" ")[1];
         // console.log(token);
         const validate = jwt.decode(token);
-        console.log(validate)
+        // console.log(validate)
         // console.log(validate.user.role);
-        if (validate.user.role === "Instructor") {
+        if (validate.role === "Instructor") {
+            //add user to the request
+            req.user = validate
             next();
         } else {
             return sendResponse(res, HTTP_STATUS.UNAUTHORIZED, "Unauthorized access");

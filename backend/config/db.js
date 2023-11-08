@@ -1,7 +1,7 @@
 // src/db.js
 const mongoose = require('mongoose')
 
-const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/e-learning-test"
+const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/e-learning-test"
 
 const connectDB = async () => {
     try {
